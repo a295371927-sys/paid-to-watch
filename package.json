@@ -1,0 +1,16 @@
+{
+  "name": "paid-to-watch",
+  "version": "0.1.0",
+  "description": "伪装成右下角广告弹窗的本地视频摸鱼播放器",
+  "main": "src/main/main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "vitest": "^2.0.0"
+  }
+}
