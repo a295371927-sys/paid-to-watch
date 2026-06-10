@@ -18,6 +18,12 @@ ipcMain.handle('scan-videos', (_e, dir) => {
   return scanFolder(dir).map((v) => ({ ...v, url: pathToFileURL(v.path).href }));
 });
 
+ipcMain.on('fake-close', () => {
+  if (!mainWindow) return;
+  mainWindow.hide();
+  setTimeout(() => mainWindow.show(), 150); // 假装关掉,150ms 后又弹回
+});
+
 app.whenReady().then(() => {
   mainWindow = createMainWindow(DEFAULT_CONFIG);
 

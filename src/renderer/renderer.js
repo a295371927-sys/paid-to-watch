@@ -89,3 +89,7 @@ window.api.onBossKey(() => {
     videoEl.play();
   }
 });
+
+document.getElementById('fake-close').addEventListener('click', () => {
+  window.api.fakeClose();
+});
