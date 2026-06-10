@@ -1,5 +1,5 @@
 // src/main/main.js
-const { app, ipcMain, dialog } = require('electron');
+const { app, ipcMain, dialog, globalShortcut } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { createMainWindow } = require('./window');
 const { DEFAULT_CONFIG } = require('../core/config');
@@ -20,6 +20,12 @@ ipcMain.handle('scan-videos', (_e, dir) => {
 
 app.whenReady().then(() => {
   mainWindow = createMainWindow(DEFAULT_CONFIG);
+
+  globalShortcut.register(DEFAULT_CONFIG.hotkey, () => {
+    mainWindow.webContents.send('toggle-boss-key');
+  });
 });
 
 app.on('window-all-closed', () => app.quit());
+
+app.on('will-quit', () => globalShortcut.unregisterAll());

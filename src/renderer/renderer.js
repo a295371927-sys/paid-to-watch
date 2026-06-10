@@ -64,3 +64,28 @@ document.getElementById('stage').addEventListener('dblclick', loadFolder);
 
 // 暴露给托盘任务复用
 window.__loadFolder = loadFolder;
+
+const { randomOtherIndex } = window.api.rotator;
+const overlay = document.getElementById('boss-overlay');
+let bossOn = false;
+
+function renderBossAd() {
+  const ad = AD_TEMPLATES[randomOtherIndex(topIdx, AD_TEMPLATES.length)];
+  overlay.style.background = ad.bg;
+  overlay.innerHTML =
+    `<div class="b-title">${ad.title}</div>` +
+    `<div class="ad-sub">${ad.subtitle}</div>` +
+    `<div class="b-btn">${ad.button}</div>`;
+}
+
+window.api.onBossKey(() => {
+  bossOn = !bossOn;
+  if (bossOn) {
+    renderBossAd();
+    overlay.hidden = false;
+    videoEl.pause();
+  } else {
+    overlay.hidden = true;
+    videoEl.play();
+  }
+});

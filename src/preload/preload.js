@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('api', {
   rotator: { nextIndex, randomOtherIndex },
   pickFolder: () => ipcRenderer.invoke('pick-folder'),
   scanVideos: (dir) => ipcRenderer.invoke('scan-videos', dir),
+  onBossKey: (cb) => ipcRenderer.on('toggle-boss-key', () => cb()),
 });
