@@ -12,6 +12,7 @@ ipcMain.handle('pick-folder', async () => {
   return r.canceled ? null : r.filePaths[0];
 });
 
+// dir 直接来自渲染层,未做路径校验:单用户本地应用,渲染层即是受信代码,接受此风险。
 ipcMain.handle('scan-videos', (_e, dir) => {
   if (!dir) return [];
   return scanFolder(dir).map((v) => ({ ...v, url: pathToFileURL(v.path).href }));
