@@ -2,12 +2,31 @@
 <html lang="zh">
   <head>
     <meta charset="utf-8" />
-    <style>
-      body { margin: 0; background: #222; color: #fff; font: 14px sans-serif;
-             display: flex; align-items: center; justify-content: center; height: 100vh; }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    窗口骨架 OK
+    <div id="app">
+      <!-- 上横幅假广告 -->
+      <div class="ad-banner" id="ad-top"></div>
+
+      <!-- 中间:视频区 -->
+      <div class="stage" id="stage">
+        <video id="video" muted></video>
+        <div class="video-empty" id="video-empty">点击托盘图标选择视频文件夹</div>
+        <ul class="playlist" id="playlist"></ul>
+      </div>
+
+      <!-- 下横幅假广告 -->
+      <div class="ad-banner" id="ad-bottom"></div>
+
+      <!-- 假关闭按钮(拖动手柄也在这条) -->
+      <div class="titlebar" id="titlebar">
+        <span class="fake-close" id="fake-close">×</span>
+      </div>
+
+      <!-- Boss Key:全屏第三条假广告 overlay,默认隐藏 -->
+      <div class="boss-overlay" id="boss-overlay" hidden></div>
+    </div>
+    <script src="renderer.js"></script>
   </body>
 </html>
