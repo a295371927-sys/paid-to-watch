@@ -21,7 +21,9 @@ ipcMain.handle('scan-videos', (_e, dir) => {
 ipcMain.on('fake-close', () => {
   if (!mainWindow) return;
   mainWindow.hide();
-  setTimeout(() => mainWindow.show(), 150); // 假装关掉,150ms 后又弹回
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.show();
+  }, 150); // 假装关掉,150ms 后又弹回
 });
 
 app.whenReady().then(() => {
