@@ -26,3 +26,41 @@ function rotateAds() {
 
 paintAds();
 setInterval(rotateAds, 6000); // 每 6s 轮播一次,模拟真广告刷新
+
+const videoEl = document.getElementById('video');
+const emptyEl = document.getElementById('video-empty');
+const playlistEl = document.getElementById('playlist');
+
+async function loadFolder() {
+  const dir = await window.api.pickFolder();
+  if (!dir) return;
+  const videos = await window.api.scanVideos(dir);
+  renderPlaylist(videos);
+  if (videos.length) play(videos[0], 0);
+}
+
+function renderPlaylist(videos) {
+  playlistEl.innerHTML = '';
+  videos.forEach((v, i) => {
+    const li = document.createElement('li');
+    li.textContent = v.name;
+    li.onclick = () => play(v, i);
+    playlistEl.appendChild(li);
+  });
+  emptyEl.style.display = videos.length ? 'none' : 'flex';
+}
+
+function play(video, index) {
+  videoEl.src = video.url;
+  videoEl.classList.add('playing');
+  videoEl.play();
+  [...playlistEl.children].forEach((li, i) =>
+    li.classList.toggle('active', i === index)
+  );
+}
+
+// 临时:双击视频区触发选择文件夹(Task 10 改由托盘菜单触发)
+document.getElementById('stage').addEventListener('dblclick', loadFolder);
+
+// 暴露给托盘任务复用
+window.__loadFolder = loadFolder;
