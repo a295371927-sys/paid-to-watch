@@ -2,7 +2,7 @@
 const DEFAULT_CONFIG = {
   videoFolder: null,
   window: { x: null, y: null, width: 360, height: 640 },
-  hotkey: 'CommandOrControl+Alt+Z',
+  hotkey: 'CommandOrControl+Alt+Q',
   muted: true,
 };
 
