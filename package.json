@@ -19,6 +19,6 @@
     "appId": "com.stevenliang.paidtowatch",
     "productName": "带薪看片",
     "files": ["src/**/*", "assets/**/*"],
-    "win": { "target": "portable" }
+    "win": { "target": "portable", "signAndEditExecutable": false }
   }
 }
