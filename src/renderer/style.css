@@ -26,13 +26,6 @@ html, body, #app { height: 100%; width: 100%; }
 #video.playing { display: block; }
 .video-empty { position: absolute; inset: 0; display: flex; align-items: center;
                justify-content: center; color: #777; font-size: 12px; text-align: center; }
-.playlist { position: absolute; left: 0; right: 0; bottom: 0; max-height: 40%;
-            overflow-y: auto; background: rgba(0,0,0,.6); list-style: none;
-            opacity: 0; transition: opacity .2s; }
-.stage:hover .playlist { opacity: 1; }
-.playlist li { color: #eee; font-size: 12px; padding: 4px 8px; cursor: pointer;
-               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.playlist li:hover, .playlist li.active { background: rgba(255,255,255,.15); }
 
 /* Boss Key 全屏假广告 */
 .boss-overlay { position: fixed; inset: 0; z-index: 9999; color: #fff;

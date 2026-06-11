@@ -29,7 +29,9 @@ setInterval(rotateAds, 6000); // 每 6s 轮播一次,模拟真广告刷新
 
 const videoEl = document.getElementById('video');
 const emptyEl = document.getElementById('video-empty');
-const playlistEl = document.getElementById('playlist');
+
+let videos = [];
+let currentIndex = 0;
 
 async function loadFolder() {
   const dir = await window.api.pickFolder();
@@ -39,29 +41,22 @@ async function loadFolder() {
 }
 
 async function openFolder(dir) {
-  const videos = await window.api.scanVideos(dir);
-  renderPlaylist(videos);
+  videos = await window.api.scanVideos(dir);
+  emptyEl.style.display = videos.length ? 'none' : 'flex';
   if (videos.length) play(videos[0], 0);
 }
 
-function renderPlaylist(videos) {
-  playlistEl.innerHTML = '';
-  videos.forEach((v, i) => {
-    const li = document.createElement('li');
-    li.textContent = v.name;
-    li.onclick = () => play(v, i);
-    playlistEl.appendChild(li);
-  });
-  emptyEl.style.display = videos.length ? 'none' : 'flex';
-}
-
 function play(video, index) {
+  currentIndex = index;
   videoEl.src = video.url;
   videoEl.classList.add('playing');
   videoEl.play();
-  [...playlistEl.children].forEach((li, i) =>
-    li.classList.toggle('active', i === index)
-  );
+}
+
+// 播完当前视频 → 切到下一个(循环);多个视频靠这个顺序播放,不展示文件名列表
+function playNext() {
+  if (!videos.length) return;
+  play(videos[(currentIndex + 1) % videos.length], (currentIndex + 1) % videos.length);
 }
 
 // 临时:双击视频区触发选择文件夹(Task 10 改由托盘菜单触发)
@@ -83,16 +78,30 @@ function renderBossAd() {
     `<div class="b-btn">${ad.button}</div>`;
 }
 
+function showAd() {
+  bossOn = true;
+  renderBossAd();
+  overlay.hidden = false;
+  videoEl.pause();
+}
+
 window.api.onBossKey(() => {
-  bossOn = !bossOn;
   if (bossOn) {
-    renderBossAd();
-    overlay.hidden = false;
-    videoEl.pause();
-  } else {
+    bossOn = false;
     overlay.hidden = true;
-    videoEl.play();
+    if (videoEl.ended) {
+      playNext();
+    } else {
+      videoEl.play();
+    }
+  } else {
+    showAd();
   }
+});
+
+// 视频自然播完 → 自动切到全屏假广告(和按老板键效果一样)
+videoEl.addEventListener('ended', () => {
+  if (!bossOn) showAd();
 });
 
 document.getElementById('fake-close').addEventListener('click', () => {
