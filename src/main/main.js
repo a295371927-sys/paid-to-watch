@@ -39,10 +39,14 @@ ipcMain.on('fake-close', () => {
 app.whenReady().then(() => {
   mainWindow = createMainWindow(config);
 
+  let persistBoundsTimer = null;
   const persistBounds = () => {
-    const b = mainWindow.getBounds();
-    config.window = { ...config.window, x: b.x, y: b.y, width: b.width, height: b.height };
-    saveConfig(config);
+    clearTimeout(persistBoundsTimer);
+    persistBoundsTimer = setTimeout(() => {
+      const b = mainWindow.getBounds();
+      config.window = { ...config.window, x: b.x, y: b.y, width: b.width, height: b.height };
+      saveConfig(config);
+    }, 200); // 防抖:拖动/缩放过程中避免高频写盘
   };
   mainWindow.on('moved', persistBounds);
   mainWindow.on('resized', persistBounds);
