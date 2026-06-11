@@ -22,6 +22,7 @@ function createMainWindow(config) {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: false, // preload 需要 require 项目内的 core 模块,沙盒模式下 require 被限制为内置模块
     },
   });
   win.setAlwaysOnTop(true, 'screen-saver');
