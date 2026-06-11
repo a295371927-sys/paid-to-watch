@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * { box-sizing: border-box; }
+      body { font-family: "Microsoft YaHei", sans-serif; padding: 16px; font-size: 13px; }
+      #current { font-weight: bold; }
+      #preview { font-size: 18px; font-weight: bold; margin: 12px 0; min-height: 24px; }
+      #error { color: #c00; font-size: 12px; min-height: 16px; }
+      button { margin-top: 8px; margin-right: 8px; padding: 4px 16px; }
+    </style>
+  </head>
+  <body>
+    <p>当前老板键: <span id="current">...</span></p>
+    <p>请按下新的组合键(至少包含 Ctrl / Alt / Shift):</p>
+    <div id="preview">等待按键...</div>
+    <div id="error"></div>
+    <button id="save" disabled>保存</button>
+    <button id="cancel">取消</button>
+    <script src="hotkey.js"></script>
+  </body>
+</html>

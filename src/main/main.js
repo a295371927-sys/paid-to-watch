@@ -3,6 +3,7 @@ const { app, ipcMain, dialog, globalShortcut } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { createMainWindow } = require('./window');
 const { createTray } = require('./tray');
+const { openHotkeyWindow } = require('./hotkeyWindow');
 const { loadConfig, saveConfig } = require('./store');
 const { scanFolder } = require('../core/videoScanner');
 
@@ -36,6 +37,23 @@ ipcMain.on('fake-close', () => {
   }, 150); // 假装关掉,150ms 后又弹回
 });
 
+function registerHotkey(accel) {
+  return globalShortcut.register(accel, () => {
+    mainWindow.webContents.send('toggle-boss-key');
+  });
+}
+
+ipcMain.handle('set-hotkey', (_e, accel) => {
+  globalShortcut.unregister(config.hotkey);
+  if (!registerHotkey(accel)) {
+    registerHotkey(config.hotkey); // 注册失败(组合被占用),恢复旧热键
+    return { success: false, message: '该组合键已被占用或无效,请换一个' };
+  }
+  config.hotkey = accel;
+  saveConfig(config);
+  return { success: true };
+});
+
 app.whenReady().then(() => {
   mainWindow = createMainWindow(config);
 
@@ -51,13 +69,12 @@ app.whenReady().then(() => {
   mainWindow.on('moved', persistBounds);
   mainWindow.on('resized', persistBounds);
 
-  globalShortcut.register(config.hotkey, () => {
-    mainWindow.webContents.send('toggle-boss-key');
-  });
+  registerHotkey(config.hotkey);
 
   tray = createTray(mainWindow, {
     onPickFolder: () => mainWindow.webContents.send('pick-folder-from-tray'),
     onToggleShow: () => (mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()),
+    onSetHotkey: () => openHotkeyWindow(),
   });
 });
 
