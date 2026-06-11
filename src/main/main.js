@@ -7,7 +7,7 @@ const { DEFAULT_CONFIG } = require('../core/config');
 const { scanFolder } = require('../core/videoScanner');
 
 let mainWindow = null;
-let tray = null;
+let tray = null; // 持有引用防止被 GC 回收导致图标消失
 
 ipcMain.handle('pick-folder', async () => {
   const r = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
