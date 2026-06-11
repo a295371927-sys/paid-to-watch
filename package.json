@@ -7,10 +7,18 @@
   "scripts": {
     "start": "electron .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dist": "electron-builder"
   },
   "devDependencies": {
     "electron": "^31.0.0",
+    "electron-builder": "^24.0.0",
     "vitest": "^2.0.0"
+  },
+  "build": {
+    "appId": "com.stevenliang.paidtowatch",
+    "productName": "带薪看片",
+    "files": ["src/**/*", "assets/**/*"],
+    "win": { "target": "portable" }
   }
 }
