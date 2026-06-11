@@ -2,10 +2,12 @@
 const { app, ipcMain, dialog, globalShortcut } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { createMainWindow } = require('./window');
+const { createTray } = require('./tray');
 const { DEFAULT_CONFIG } = require('../core/config');
 const { scanFolder } = require('../core/videoScanner');
 
 let mainWindow = null;
+let tray = null;
 
 ipcMain.handle('pick-folder', async () => {
   const r = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
@@ -31,6 +33,11 @@ app.whenReady().then(() => {
 
   globalShortcut.register(DEFAULT_CONFIG.hotkey, () => {
     mainWindow.webContents.send('toggle-boss-key');
+  });
+
+  tray = createTray(mainWindow, {
+    onPickFolder: () => mainWindow.webContents.send('pick-folder-from-tray'),
+    onToggleShow: () => (mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()),
   });
 });
 

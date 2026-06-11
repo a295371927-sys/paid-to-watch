@@ -93,3 +93,5 @@ window.api.onBossKey(() => {
 document.getElementById('fake-close').addEventListener('click', () => {
   window.api.fakeClose();
 });
+
+window.api.onPickFolderFromTray(() => window.__loadFolder());

@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('api', {
   scanVideos: (dir) => ipcRenderer.invoke('scan-videos', dir),
   onBossKey: (cb) => ipcRenderer.on('toggle-boss-key', () => cb()),
   fakeClose: () => ipcRenderer.send('fake-close'),
+  onPickFolderFromTray: (cb) => ipcRenderer.on('pick-folder-from-tray', () => cb()),
 });
