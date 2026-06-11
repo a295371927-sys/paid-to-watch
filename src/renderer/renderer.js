@@ -34,6 +34,11 @@ const playlistEl = document.getElementById('playlist');
 async function loadFolder() {
   const dir = await window.api.pickFolder();
   if (!dir) return;
+  await window.api.setFolder(dir);
+  await openFolder(dir);
+}
+
+async function openFolder(dir) {
   const videos = await window.api.scanVideos(dir);
   renderPlaylist(videos);
   if (videos.length) play(videos[0], 0);
@@ -95,3 +100,9 @@ document.getElementById('fake-close').addEventListener('click', () => {
 });
 
 window.api.onPickFolderFromTray(() => window.__loadFolder());
+
+// 启动时:有记住的文件夹就直接加载
+(async () => {
+  const cfg = await window.api.getConfig();
+  if (cfg.videoFolder) await openFolder(cfg.videoFolder);
+})();

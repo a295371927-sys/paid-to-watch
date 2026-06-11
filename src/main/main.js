@@ -3,11 +3,13 @@ const { app, ipcMain, dialog, globalShortcut } = require('electron');
 const { pathToFileURL } = require('node:url');
 const { createMainWindow } = require('./window');
 const { createTray } = require('./tray');
-const { DEFAULT_CONFIG } = require('../core/config');
+const { loadConfig, saveConfig } = require('./store');
 const { scanFolder } = require('../core/videoScanner');
 
 let mainWindow = null;
 let tray = null; // 持有引用防止被 GC 回收导致图标消失
+
+let config = loadConfig();
 
 ipcMain.handle('pick-folder', async () => {
   const r = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
@@ -20,6 +22,12 @@ ipcMain.handle('scan-videos', (_e, dir) => {
   return scanFolder(dir).map((v) => ({ ...v, url: pathToFileURL(v.path).href }));
 });
 
+ipcMain.handle('get-config', () => config);
+ipcMain.handle('set-folder', (_e, dir) => {
+  config.videoFolder = dir;
+  saveConfig(config);
+});
+
 ipcMain.on('fake-close', () => {
   if (!mainWindow) return;
   mainWindow.hide();
@@ -29,9 +37,17 @@ ipcMain.on('fake-close', () => {
 });
 
 app.whenReady().then(() => {
-  mainWindow = createMainWindow(DEFAULT_CONFIG);
+  mainWindow = createMainWindow(config);
 
-  globalShortcut.register(DEFAULT_CONFIG.hotkey, () => {
+  const persistBounds = () => {
+    const b = mainWindow.getBounds();
+    config.window = { ...config.window, x: b.x, y: b.y, width: b.width, height: b.height };
+    saveConfig(config);
+  };
+  mainWindow.on('moved', persistBounds);
+  mainWindow.on('resized', persistBounds);
+
+  globalShortcut.register(config.hotkey, () => {
     mainWindow.webContents.send('toggle-boss-key');
   });
 

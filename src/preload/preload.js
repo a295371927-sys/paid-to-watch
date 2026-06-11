@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld('api', {
   rotator: { nextIndex, randomOtherIndex },
   pickFolder: () => ipcRenderer.invoke('pick-folder'),
   scanVideos: (dir) => ipcRenderer.invoke('scan-videos', dir),
+  getConfig: () => ipcRenderer.invoke('get-config'),
+  setFolder: (dir) => ipcRenderer.invoke('set-folder', dir),
   onBossKey: (cb) => ipcRenderer.on('toggle-boss-key', () => cb()),
   fakeClose: () => ipcRenderer.send('fake-close'),
   onPickFolderFromTray: (cb) => ipcRenderer.on('pick-folder-from-tray', () => cb()),
