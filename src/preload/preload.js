@@ -13,4 +13,7 @@ contextBridge.exposeInMainWorld('api', {
   onBossKey: (cb) => ipcRenderer.on('toggle-boss-key', () => cb()),
   fakeClose: () => ipcRenderer.send('fake-close'),
   onPickFolderFromTray: (cb) => ipcRenderer.on('pick-folder-from-tray', () => cb()),
+  onToggleLive: (cb) => ipcRenderer.on('toggle-live', (_e, on) => cb(on)),
+  navigateLive: (url) => ipcRenderer.send('navigate-live', url),
+  onSetupMode: (cb) => ipcRenderer.on('setup-mode', (_e, on) => cb(on)),
 });

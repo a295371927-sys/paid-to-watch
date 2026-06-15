@@ -110,6 +110,36 @@ document.getElementById('fake-close').addEventListener('click', () => {
 
 window.api.onPickFolderFromTray(() => window.__loadFolder());
 
+// 网页直播由主进程的 BrowserView 叠加在 .stage 区域上方显示,
+// 这里只需要在切换时暂停/恢复本地视频,避免两边同时占用这块区域。
+window.api.onToggleLive((on) => {
+  if (on) {
+    videoEl.pause();
+    videoEl.classList.remove('playing');
+    emptyEl.style.display = 'none';
+  } else if (videos.length) {
+    videoEl.classList.add('playing');
+    videoEl.play();
+  } else {
+    emptyEl.style.display = 'flex';
+  }
+});
+
+// 直播设置模式:放大窗口时显示地址栏,可跳转到任意网页(B站、网页游戏等)
+const addrBar = document.getElementById('addr-bar');
+const addrInput = document.getElementById('addr-input');
+function navigateLive() {
+  const url = addrInput.value.trim();
+  if (url) window.api.navigateLive(url);
+}
+document.getElementById('addr-go').addEventListener('click', navigateLive);
+addrInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') navigateLive();
+});
+window.api.onSetupMode((on) => {
+  addrBar.hidden = !on;
+});
+
 // 启动时:有记住的文件夹就直接加载
 (async () => {
   const cfg = await window.api.getConfig();

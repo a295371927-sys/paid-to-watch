@@ -18,6 +18,7 @@ function createMainWindow(config) {
     alwaysOnTop: true,
     resizable: true,
     skipTaskbar: true,
+    fullscreenable: false, // 网页里的播放器点"全屏"时,不让伪装窗口被拉成真全屏
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.js'),
       contextIsolation: true,

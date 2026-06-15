@@ -27,6 +27,15 @@ html, body, #app { height: 100%; width: 100%; }
 .video-empty { position: absolute; inset: 0; display: flex; align-items: center;
                justify-content: center; color: #777; font-size: 12px; text-align: center; }
 
+/* 直播设置模式下的地址栏,平时隐藏,放大窗口时才出现 */
+.addr-bar { position: absolute; top: 0; left: 0; right: 0; height: 32px; z-index: 5;
+            display: flex; gap: 4px; padding: 4px; background: #222; }
+.addr-bar[hidden] { display: none; }
+.addr-bar input { flex: 1; border: none; border-radius: 4px; padding: 0 8px;
+                  font-size: 13px; outline: none; }
+.addr-bar button { border: none; border-radius: 4px; padding: 0 12px;
+                   background: #4a90d9; color: #fff; font-size: 13px; cursor: pointer; }
+
 /* Boss Key 全屏假广告 */
 .boss-overlay { position: fixed; inset: 0; z-index: 9999; color: #fff;
                 display: flex; flex-direction: column; align-items: center;

@@ -4,6 +4,13 @@ const DEFAULT_CONFIG = {
   window: { x: null, y: null, width: 360, height: 640 },
   hotkey: 'CommandOrControl+Alt+Q',
   muted: true,
+  liveUrl: 'https://tv.cctv.com/live/cctv5/',
+  liveMuted: true,
+  favoriteSites: [
+    { name: 'CCTV5 直播', url: 'https://tv.cctv.com/live/cctv5/' },
+    { name: '咪咕视频', url: 'https://www.miguvideo.com/' },
+    { name: 'B 站直播', url: 'https://live.bilibili.com/' },
+  ],
 };
 
 function mergeConfig(saved) {
