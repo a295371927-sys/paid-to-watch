@@ -68,6 +68,7 @@ window.__loadFolder = loadFolder;
 const { randomOtherIndex } = window.api.rotator;
 const overlay = document.getElementById('boss-overlay');
 let bossOn = false;
+let liveOn = false;
 
 function renderBossAd() {
   const ad = AD_TEMPLATES[randomOtherIndex(topIdx, AD_TEMPLATES.length)];
@@ -89,6 +90,7 @@ window.api.onBossKey(() => {
   if (bossOn) {
     bossOn = false;
     overlay.hidden = true;
+    if (liveOn) return; // 直播模式下本地视频保持暂停,由网页直播顶替显示
     if (videoEl.ended) {
       playNext();
     } else {
@@ -101,7 +103,7 @@ window.api.onBossKey(() => {
 
 // 视频自然播完 → 自动切到全屏假广告(和按老板键效果一样)
 videoEl.addEventListener('ended', () => {
-  if (!bossOn) showAd();
+  if (!bossOn && !liveOn) showAd();
 });
 
 document.getElementById('fake-close').addEventListener('click', () => {
@@ -113,6 +115,7 @@ window.api.onPickFolderFromTray(() => window.__loadFolder());
 // 网页直播由主进程的 BrowserView 叠加在 .stage 区域上方显示,
 // 这里只需要在切换时暂停/恢复本地视频,避免两边同时占用这块区域。
 window.api.onToggleLive((on) => {
+  liveOn = on;
   if (on) {
     videoEl.pause();
     videoEl.classList.remove('playing');
